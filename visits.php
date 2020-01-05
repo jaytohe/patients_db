@@ -146,7 +146,7 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 	<tbody>
 	<?php if ($number_of_records != 0 ) { while ($row = array_pop($visits)) { ?>
 	<tr>
-		<td><a href="/visit.php?id=<?=$row[0]?>"><?=Modify::dateconv($row[1])?></a><input type='checkbox' class='chickfilla' style='position: relative; display: inline-block; left: 10px;' id="chickfilla_<?=$row[0]?>"></td>
+		<td><a href="/visit.php?id=<?=$row[0]?>"><?=str_replace("-","/",Modify::dateconv($row[1]))?></a><input type='checkbox' class='chickfilla' style='position: relative; display: inline-block; left: 10px;' id="chickfilla_<?=$row[0]?>"></td>
 		<td><a href="/visit.php?id=<?=$row[0]?>"><?=$row[2]?></a></td>
 	</tr>
 	<?php  } } else { ?>

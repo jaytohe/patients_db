@@ -27,7 +27,7 @@ if ($result == NULL) {
 	exit();
 }
 $result['birth_date'] = $modinfo->dateconv($result['birth_date']);
-
+$result['birth_date'] = str_replace("-","/",$result['birth_date']); //Convert - to / so global date format of patients_db (DD/MM/YYYY) is satisfied.
 $res = $modinfo->add($queries[1], 'i', array($id),1);
 $num_of_phones=0;
 
@@ -47,7 +47,7 @@ foreach ($phones_table as $key) {
 
 /* START OF POST METHOD CODE */
 
-else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when users has filled out all necessary* forms.
+else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when users has filled out all necessary* forms.
 	if(($_POST['dt1'] || $_POST['dt2'] || $_POST['dt3']) == "" ) {
 		echo "Required fields haven't been filled out."; //ONLY FOR DEBUGGING. MUST CHANGE ERROR HANDLING.
 		exit();
@@ -128,7 +128,7 @@ else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when 
     
   </div>
 
-<form class="form-horizontal" action="" method="post">
+<form class="form-horizontal" id="leform" action="" method="post">
 <fieldset>
 
 <!-- Form Name -->
@@ -136,27 +136,27 @@ else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when 
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt1">Name</label>
+  <label class="label" for="dt1">Name<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt1" name="dt1" type="text" value="<?=$result['first_name']?>" placeholder="Enter name:" class="input " required="">
+    <input id="dt1" name="dt1" type="text" value="<?=$result['first_name']?>" placeholder="Enter name:" class="input " required>
     
   </div>
 </div>
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt2">Surname</label>
+  <label class="label" for="dt2">Surname<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt2" name="dt2" type="text" value="<?=$result['last_name']?>" placeholder="Enter surname:" class="input " required="">
+    <input id="dt2" name="dt2" type="text" value="<?=$result['last_name']?>" placeholder="Enter surname:" class="input " required>
     
   </div>
 </div>
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt4">Date of Birth</label>
+  <label class="label" for="dt4">Date of Birth<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt4" name="dt4" type="text" value="<?=$result['birth_date']?>" placeholder="DD/MM/YY" class="input ">
+    <input id="dt4" name="dt4" type="text" value="<?=$result['birth_date']?>" placeholder="DD/MM/YY" class="input " required>
     
   </div>
 </div>
@@ -171,24 +171,24 @@ else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when 
 </div>
 
 <fieldset class="phone_nums">
-<label class="label" for="repeatable" style="display:inline-block;">Phone Number(s)&nbsp;</label>
-<input type="button" class="add" value="+1" style="display:inline-block;" />
+<label class="label" for="repeatable" style="display:inline-block;">Phone Number(s)<p style="color: red; display: inline-block;">*</p>&nbsp;</label>
+<input type="button" class="add" value="+1" style="display:inline-block;">
 		<div class="repeatable"></div>
 </fieldset>
 	<script type="text/template" id="phone_nums">
 				<div class="field-group row">
-					<input name="phone_nums[{?}][task]" id="task_{?}" "type="text" placeholder="Eg. (+32)6743207899" class="input ">
+					<input name="phone_nums[{?}][task]" id="task_{?}" "type="text" placeholder="Eg. +326743207899" class="input " required>
 					<input name="phone_nums[{?}][owner]" id="owner_{?}" type="text" placeholder="(Optional) Whose number is this?" class="input ">
 					<p>&nbsp;</p>
-					<button class="delete" value="Remove" />
+					<button class="delete" value="Remove">
 				</div>
 			</script>
 			<!-- <input name="phone_nums[{?}][uniqaydee]" id="uniqaydee_{?}" type="hidden" value=""> -->
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt3">Diagnosis</label>
+  <label class="label" for="dt3">Diagnosis<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt3" name="dt3" type="text" value="<?=$result['diagnosis']?>" placeholder="Enter diagnosis: " class="input " required="">
+    <input id="dt3" name="dt3" type="text" value="<?=$result['diagnosis']?>" placeholder="Enter diagnosis: " class="input " required>
     
   </div>
 </div>
@@ -211,9 +211,8 @@ else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when 
 
 <!-- Button -->
 <div class="field">
-  <label class="label" for="submit"></label>
   <div class="control">
-    <button  d="submit" name="submit" class="button is-info">Update Record</button>
+    <button type="submit" id="k39btn" name="k39btn" class="button is-info">Update Record</button>
   </div>
 </div>
 </fieldset>
@@ -225,7 +224,7 @@ else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when 
 	</section>
 </body>
 <script>
- $(function(){
+ $(function(){ // <-- Runs when DOM is ready.
 	 $(".phone_nums .repeatable").repeatable({
 	 addTrigger: ".phone_nums .add",
 	 deleteTrigger: ".phone_nums .delete",
@@ -234,14 +233,14 @@ else if ( ($method == 'POST') && (isset($_POST['submit'])) ) { //this runs when 
 	 max: 10
 	});
 
-var phones = <?php echo json_encode($phones); ?>;
-var owners = <?php echo json_encode($owners); ?>;
-var getUrlParameter = function getUrlParameter(sParam) {
+	var phones = <?php echo json_encode($phones); ?>;
+	var owners = <?php echo json_encode($owners); ?>;
+	
+	var getUrlParameter = function getUrlParameter(sParam) { //Get ids from url function.
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
         i;
-
     for (i = 0; i < sURLVariables.length; i++) {
         sParameterName = sURLVariables[i].split('=');
 
@@ -249,19 +248,20 @@ var getUrlParameter = function getUrlParameter(sParam) {
             return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
         }
     }
-};
+	};
 
-$("input[id^='task_'").each(function(index, element) { 
-$(element).val(phones[index]);
-});
-$("input[id^='owner_'").each(function(index, element) { 
-$(element).val(owners[index]);
-});
-var client_id = getUrlParameter('id');
-$('#delete_r').click(function() { 
-var arr_id = [];
-arr_id.push(client_id);
-if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
+	$("input[id^='task_'").each(function(index, element) { // <- Re-inputs fetched phone numbers to their fields. 
+		$(element).val(phones[index]);
+	});
+	$("input[id^='owner_'").each(function(index, element) { // <- Re-inputs fetched owners to their fields.
+		$(element).val(owners[index]);
+	});
+	var client_id = getUrlParameter('id'); //Get client ID from url. Not good practice. In future we will fetch client_id in a hidden field without requiring JS.
+	
+	$('#delete_r').click(function() { //<-- Runs when delete button is clicked.
+		var arr_id = [];
+		arr_id.push(client_id);
+		if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
 		$.ajax({ 
 		url: '/classes/Delete.php',
 		type: 'POST',
@@ -270,12 +270,42 @@ if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
 		success: function(response) {
 				alert("The following IDs have been completely removed."+"\n"+response.id);
 				window.location.href = "/index.php";
-		}
+			}
 			
 		});
-}
-});
-});
+		}
+		//END OF DELETE FUNCTION
+	});
+		//On Submit Function. --Checks Validity of data input.
+		$("#leform").submit(function( event ) {
+		console.log("Processing Submit...");
+		// Declare Variables
+		var regex_date = /^([1-2][0-9]|(3)[0-1]|[1-9]|(0)[1-9])(\/)(((0)[1-9])|((1)[0-2])|[0-9])(\/)\d{4}$/;
+		var date = $("#dt4").val(); //get date value
+		var regex_phone = /^([(+]*[0-9]+[()+. -]*)$/; //same regex we use in search.php
+		
+		
+		//Check if date is in correct format (DD/MM/YYYY) with regex.
+		if(regex_date.test(date) == false) {
+			console.log(date);
+			alert("Invalid date. Correct format : DD/MM/YYYY"+"\nExample:  09/06/2019 or 9/6/2019");
+			event.preventDefault();
+		} else {console.log("Date is good.");}
+		
+		//Check if phone numbers match regex.
+		$("[id^=task_]").each(function(index, elem) { //we use jquery's each() to iterate through multiple phone numbers.
+			var phone = $(elem).val();
+			console.log(phone);
+			if((phone.length < 4) || !(phone).match(regex_phone)) {
+				alert("Phone number "+(index+1)+" is not correct."+"\n"+"Please check the format or the length of the number.");
+				event.preventDefault();
+			} else {console.log("Phone number is good.");}
+		});
+		//END OF SUBMIT FUNCTION
+		});
+		
+	// END OF DOCUMENT READY FUNCTION
+	});
 
 
 </script>

@@ -8,10 +8,10 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 
 
 
-if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) { 
+if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) { 
 $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))";
 
-	if(($_POST['dt1'] || $_POST['dt2'] || $_POST['dt3']) == "" ) {
+	if(($_POST['dt1'] || $_POST['dt2'] || $_POST['dt3']) == "" ) { //Server side additional check to ensure data integrity.
 		echo "Required fields haven't been filled out."; 
 		exit();
 	} 
@@ -75,7 +75,7 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
     <li class="is-active"><a href="/new.php" aria-current="page">New Entry</a></li>
   </ul>
 </nav>
-<form class="form-horizontal" action="" method="post">
+<form class="form-horizontal" id="leform" action="" method="post">
 <fieldset>
 
 <!-- Form Name -->
@@ -83,27 +83,27 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt1">Name</label>
+  <label class="label" for="dt1">Name<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt1" name="dt1" type="text" placeholder="Enter name:" class="input " required="">
+    <input id="dt1" name="dt1" type="text" placeholder="Enter name:" class="input " required>
     
   </div>
 </div>
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt2">Surname</label>
+  <label class="label" for="dt2">Surname<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt2" name="dt2" type="text" placeholder="Enter surname:" class="input " required="">
+    <input id="dt2" name="dt2" type="text" placeholder="Enter surname:" class="input " required>
     
   </div>
 </div>
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt4">Date of Birth</label>
+  <label class="label" for="dt4">Date of Birth<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt4" name="dt4" type="text" placeholder="DD/MM/YY" class="input ">
+    <input id="dt4" name="dt4" type="text" placeholder="DD/MM/YYYY" class="input " required>
     
   </div>
 </div>
@@ -118,23 +118,23 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
 </div>
 
 <fieldset class="phone_nums">
-<label class="label" for="repeatable" style="display:inline-block;">Phone Number(s)&nbsp;</label>
-<input type="button" class="add" value="+1" style="display:inline-block;" />
+<label class="label" for="repeatable" style="display:inline-block;">Phone Number(s)<p style="color: red; display: inline-block;">*</p>&nbsp;</label>
+<input type="button" class="add" value="+1" style="display:inline-block;">
 		<div class="repeatable"></div>
 </fieldset>
 	<script type="text/template" id="phone_nums">
 				<div class="field-group row">
-					<input name="phone_nums[{?}][task]" id="task_{?}" "type="text" placeholder="Eg. (+32)6743207899" class="input ">
+					<input name="phone_nums[{?}][task]" id="task_{?}" "type="text" placeholder="Eg. +326743207899" class="input" required>
 					<input name="phone_nums[{?}][owner]" id="owner_{?}" type="text" placeholder="(Optional) Whose number is this?" class="input ">
 					<p>&nbsp;</p>
 					<button class="delete" value="Remove" />
 				</div>
-			</script>
+	</script>
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt3">Diagnosis</label>
+  <label class="label" for="dt3">Diagnosis<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt3" name="dt3" type="text" placeholder="Enter diagnosis: " class="input " required="">
+    <input id="dt3" name="dt3" type="text" placeholder="Enter diagnosis: " class="input " required>
     
   </div>
 </div>
@@ -157,9 +157,8 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
 
 <!-- Button -->
 <div class="field">
-  <label class="label" for="submit"></label>
   <div class="control">
-    <button id="submit" name="submit" class="button is-primary">Add Patient</button>
+    <button type="submit" id="k39btn" name="k39btn" class="button is-primary">Add Patient</button>
   </div>
 </div>
 
@@ -171,12 +170,39 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
 </body>
 <script>
  $(function(){
+	 //Repeat phone number fields -- Repeatable.js script
 	 $(".phone_nums .repeatable").repeatable({
 	 addTrigger: ".phone_nums .add",
 	 deleteTrigger: ".phone_nums .delete",
 	 template: "#phone_nums",
 	 min: 1,
 	 max: 10
+	});
+	//On Submit Function. --Checks Validity of data input.
+	$("#leform").submit(function( event ) {
+		console.log("Processing Submit...");
+		// Declare Variables
+		var regex_date = /^([1-2][0-9]|(3)[0-1]|[1-9]|(0)[1-9])(\/)(((0)[1-9])|((1)[0-2])|[0-9])(\/)\d{4}$/;
+		var date = $("#dt4").val(); //get date value
+		var regex_phone = /^([(+]*[0-9]+[()+. -]*)$/; //same regex we use in search.php
+		
+		
+		//Check if date is in correct format (DD/MM/YYYY) with regex.
+		if(regex_date.test(date) == false) {
+			console.log(date);
+			alert("Invalid date. Correct format : DD/MM/YYYY"+"\nExample:  09/06/2019 or 9/6/2019");
+			event.preventDefault();
+		} else {console.log("Date is good.");}
+		
+		//Check if phone numbers match regex.
+		$("[id^=task_]").each(function(index, elem) { //we use jquery's each() to iterate through multiple phone numbers.
+			var phone = $(elem).val();
+			console.log(phone);
+			if((phone.length < 4) || !(phone).match(regex_phone)) {
+				alert("Phone number "+(index+1)+" is not correct."+"\n"+"Please check the format or the length of the number.");
+				event.preventDefault();
+			} else {console.log("Phone number is good.");}
+		});
 	});
 });
 </script>

@@ -40,11 +40,17 @@ if($state ==1) {
 }
 $outter = $modvisit->add("SELECT first_name,last_name FROM clients WHERE client_id=(?)",'i',$cid,1);
 $result = $outter->fetch_assoc();
+
+/* DATE CONVERSION */
+$tmpdate = Modify::dateconv($vis->data_get('date'));
+$globaldate='';
+$globaldate = str_replace('-','/',$tmpdate);
+/* --------------- */
+
 //post request means either add new visit or edit old visit. We distinguish between the two 'states' from the url. If only client_id in the url is given...
 //...that means that user wants to add a new patient.
-// If only visit_id is given that means that the user wants to update an old entry.
-
-if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
+// If only visit_id is given that means that the user wants to update an old entry
+if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	//print_r($_POST);
 	//echo "State is: ".$state;
 	$ledata = [];
@@ -132,7 +138,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
 	<li class="is-active"><a href="#"><?=$mode_string?> Entry</a></li>
   </ul>
 </nav>
-<form class="form-horizontal" action="" method="post">
+<form class="form-horizontal" id="leform" action="" method="post">
 <fieldset>
 
 <!-- Form Name -->
@@ -140,18 +146,18 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt1">Date</label>
+  <label class="label" for="dt1">Date<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt1" name="dt1" type="text" placeholder="DD/MM/YYYY" class="input " value="<?=Modify::dateconv($vis->data_get('date'));?>" required="">
+    <input id="dt1" name="dt1" type="text" placeholder="DD/MM/YYYY" class="input " value="<?=$globaldate;?>" required=>
     
   </div>
 </div>
 
 <!-- Text input-->
 <div class="field">
-  <label class="label" for="dt2">Diagnosis</label>
+  <label class="label" for="dt2">Diagnosis<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt2" name="dt2" type="text" class="input " value="<?=$vis->data_get('diagnosis'); ?>" required="">
+    <input id="dt2" name="dt2" type="text" class="input " value="<?=$vis->data_get('diagnosis'); ?>" required=>
     
   </div>
 </div>
@@ -219,10 +225,10 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
 </div>
 
 <!-- Button -->
+<br>
 <div class="field">
-  <label class="label" for="submit"></label>
   <div class="control">
-    <button id="submit" name="submit" class="button is-info"><?=$mode_string?> Record</button>
+    <button type="submit" id="k39btn" name="k39btn" class="button is-info"><?=$mode_string?> Record</button>
   </div>
 </div>
 
@@ -234,8 +240,8 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
 	</section>
 <script>
  $(function(){
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = window.location.search.substring(1),
+	var getUrlParameter = function getUrlParameter(sParam) {
+		var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
         sParameterName,
         i;
@@ -248,11 +254,13 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-var visit_id = getUrlParameter('id');
-$('#delete_r').click(function() { 
-	var arr_id = [];
-	arr_id.push(visit_id);
-	if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
+	var visit_id = getUrlParameter('id'); //Get client ID from url. Not good practice. In future we will fetch client_id in a hidden field without requiring JS.
+	
+	//Start of DELETE function on click of delete button.
+	$('#delete_r').click(function() { 
+		var arr_id = [];
+		arr_id.push(visit_id);
+		if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
 		$.ajax({ 
 		url: '/classes/Delete.php',
 		type: 'POST',
@@ -265,7 +273,25 @@ $('#delete_r').click(function() {
 			
 		});
 	}
-});
+	});
+	
+	//On Submit Function. --Checks Validity of date.
+	$("#leform").submit(function( event ) {
+		console.log("Processing Submit...");
+		// Declare Variables
+		var regex_date = /^([1-2][0-9]|(3)[0-1]|[1-9]|(0)[1-9])(\/)(((0)[1-9])|((1)[0-2])|[0-9])(\/)\d{4}$/;
+		var date = $("#dt1").val(); //get date value
+		
+		//Check if date is in correct format (DD/MM/YYYY) with regex.
+		if(regex_date.test(date) == false) {
+			console.log(date);
+			alert("Invalid date. Correct format : DD/MM/YYYY"+"\nExample:  09/06/2019 or 9/6/2019");
+			event.preventDefault();
+		} else {console.log("Date is good.");}
+	
+	//END OF SUBMIT FUNCTION
+		});
+
 });
 </script>
 </body>
