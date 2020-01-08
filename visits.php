@@ -94,7 +94,7 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 			<?php echo $list;?>
 		</div>
 		<div class="level-item">
-			<button class="button is-warning" id="SendServBtn">Commit</button> 
+			<button class="button is-warning" id="SendServBtn" style="display:none;">Commit</button> 
     </div>
 	</div>
 	<div class="level-right">
@@ -172,9 +172,9 @@ function OnDelete(elem) {
 	alert("You can now remove entries from the database. Proceed with caution!");
 	jQuery('#visits_db td:nth-child(1) a').each(function(key, val) {
 		jQuery(val).css('display', 'inline-block');
-		jQuery('#SendServBtn').show();
 	});
 	$(".chickfilla").show();
+	$("#SendServBtn").removeAttr("style");
 	already_clicked = 1;
 	} else {
 	jQuery('.chickfilla').hide();
@@ -183,7 +183,7 @@ function OnDelete(elem) {
 	jQuery('#visits_db td:nth-child(1) a').each(function(key,val) {
 		jQuery(val).css('display', 'block');
 	});
-	jQuery('#SendServBtn').hide();
+	jQuery('#SendServBtn').css("display", "none");
 	already_clicked = 0;
 	}
 }

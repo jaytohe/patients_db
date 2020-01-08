@@ -95,7 +95,7 @@ Visits</label>
 			<?php echo $list;?>
 		</div>
 		<div class="level-item">
-			<button class="button is-warning" id="SendServBtn">Commit</button> 
+			<button class="button is-warning" id="SendServBtn" style="display:none;">Commit</button> 
     </div>
 	</div>
 	<div class="level-right">
@@ -163,7 +163,7 @@ Visits</label>
 <script>
 $(document).ready(function() {
 		$('input:radio[name=table_choice][value=1]').prop("checked", true);
-		$('#SendServBtn').hide();
+		//$('#SendServBtn').hide();
 		console.log("DOM is ready.");
 		var first_name = '';
 		var last_name = '';
@@ -286,8 +286,8 @@ function OnDelete(elem) {
 		var id="chickfilla_";
 		id += jQuery(val).text();
 		jQuery(val).after("<input type='checkbox' class='chickfilla' style='position: relative; display: inline-block; left: 10px;' id="+id+">");
-		jQuery('#SendServBtn').show();
 	});
+	jQuery('#SendServBtn').removeAttr("style");
 	already_clicked = 1;
 	} else {
 	jQuery('.chickfilla').remove();
@@ -296,7 +296,7 @@ function OnDelete(elem) {
 	jQuery('#patients_tb td:nth-child(1) a').each(function(key,val) {
 		jQuery(val).css('display', 'block');
 	});
-	jQuery('#SendServBtn').hide();
+	jQuery('#SendServBtn').css("display", "none");
 	already_clicked = 0;
 	}
 }
