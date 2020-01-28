@@ -15,14 +15,14 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
 		header("Location: /login/error.php");
 		exit;
 	} else {
-		$usr = mysqli_real_escape_string($conn, $usr); 
+		$usr = mysqli_real_escape_string($conn, $usr);
+		$usrfail = rawurlencode($usr);
 		$pass = mysqli_real_escape_string($conn, $pass);
 		$pass = hash("sha256", $pass);
 		$query = "SELECT * FROM users WHERE username=? AND password=?";
 		$stmt = mysqli_stmt_init($conn);
 		if (!mysqli_stmt_prepare($stmt, $query)) {
-			$_SESSION['err']="A MySQL error has occured. Please contact your administrator.";
-			header("Location: /login/error.php?u=$usr&conn=0");
+			header("Location: /login/error.php?u=$usrfail&conn=0");
 			exit;
 		} else {
 			mysqli_stmt_bind_param($stmt, "ss", $usr, $pass);
@@ -32,10 +32,12 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['submit'])) ) {
 					session_start();
 					$_SESSION['usr_id']=$check['usr_id'];
 					$_SESSION['username']=$check['username'];
+					//ANTI-CSRF
+					$length = 32;
+					$_SESSION['token'] = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, $length);
 					header("Location: /index.php");
 			} else {
-				$_SESSION['err']="The username and password that you entered did not match our records. Please double-check and try again.";
-				header("Location: /login/error.php?u=$usr");
+				header("Location: /login/error.php?u=$usrfail");
 			}
 		}
 	}
