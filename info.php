@@ -26,6 +26,7 @@ if ($result == NULL) {
 	echo "ID is invalid.";
 	exit();
 }
+$result = $modinfo->htmlarrayescape($result); //prevent XSS injection.
 $result['birth_date'] = $modinfo->dateconv($result['birth_date']);
 $result['birth_date'] = str_replace("-","/",$result['birth_date']); //Convert - to / so global date format of patients_db (DD/MM/YYYY) is satisfied.
 $res = $modinfo->add($queries[1], 'i', array($id),1);
@@ -51,6 +52,9 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 	if(($_POST['dt1'] || $_POST['dt2'] || $_POST['dt3']) == "" ) {
 		echo "Required fields haven't been filled out."; //ONLY FOR DEBUGGING. MUST CHANGE ERROR HANDLING.
 		exit();
+	}
+	if( (!isset($_POST['token'])) || ($_POST['token'] != $_SESSION['token'])) { //prevent CSRF
+	exit("CSRF Detected.");
 	}
 	else {
 		require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Modify.php');
@@ -209,6 +213,11 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
   </div>
 </div>
 
+<div class="field">
+  <div class="control">                     
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+  </div>
+</div>
 <!-- Button -->
 <div class="field">
   <div class="control">
@@ -260,12 +269,13 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 	
 	$('#delete_r').click(function() { //<-- Runs when delete button is clicked.
 		var arr_id = [];
+		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
 		arr_id.push(client_id);
 		if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
 		$.ajax({ 
 		url: '/classes/Delete.php',
 		type: 'POST',
-		data: {table: "0", ids_to_delete : arr_id},
+		data: {table: "0", ids_to_delete : arr_id, token: csrftoken},
 		dataType : 'JSON',
 		success: function(response) {
 				alert("The following IDs have been completely removed."+"\n"+response.id);

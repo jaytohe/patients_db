@@ -1,16 +1,17 @@
 <?php
 
 session_start();
+
 if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 	header('Location: /login/'); //User is not logged in. Redirect them to login page.
 	exit;
 }
 
-
-
-if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) { 
-$query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))";
-
+if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
+	if( (!isset($_POST['token'])) || ($_POST['token'] != $_SESSION['token'])) { //prevent CSRF
+	exit("CSRF Detected.");
+	}
+	$query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))";
 	if(($_POST['dt1'] || $_POST['dt2'] || $_POST['dt3']) == "" ) { //Server side additional check to ensure data integrity.
 		echo "Required fields haven't been filled out."; 
 		exit();
@@ -37,7 +38,9 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Home</title>
+
     <link rel="stylesheet" href="/css/bulma.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	<script
@@ -152,6 +155,12 @@ $query = "INSERT INTO clients VALUES(DEFAULT, (?), (?), (?), (?), (?), (?), (?))
   <label class="label" for="dt7">Family History</label>
   <div class="control">                     
     <textarea class="textarea" id="dt7" name="dt7"></textarea>
+  </div>
+</div>
+
+<div class="field">
+  <div class="control">                     
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
   </div>
 </div>
 

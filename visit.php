@@ -5,6 +5,8 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 	header('Location: /login/'); //User is not logged in. Redirect them to login page.
 	exit;
 }
+
+
 if (strpos($_SERVER['REQUEST_URI'], '?')) { // check if url has any parameter
 	if (isset($_GET['id']) && (!isset($_GET['cid'])) ) {
 		if(is_numeric($_GET['id']))  {
@@ -25,6 +27,7 @@ if (strpos($_SERVER['REQUEST_URI'], '?')) { // check if url has any parameter
 		}
 	} else {exit();}//irrelevant arguments given -> exit
 } else {exit();} ;
+
 require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Modify.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/classes/HTML_Visits.php');
 $modvisit = new Modify();
@@ -47,6 +50,7 @@ $globaldate='';
 $globaldate = str_replace('-','/',$tmpdate);
 /* --------------- */
 
+$refresh = 0;
 //post request means either add new visit or edit old visit. We distinguish between the two 'states' from the url. If only client_id in the url is given...
 //...that means that user wants to add a new patient.
 // If only visit_id is given that means that the user wants to update an old entry
@@ -226,6 +230,13 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 
 <!-- Button -->
 <br>
+
+<div class="field">
+  <div class="control">                     
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+  </div>
+</div>
+
 <div class="field">
   <div class="control">
     <button type="submit" id="k39btn" name="k39btn" class="button is-info"><?=$mode_string?> Record</button>
@@ -259,12 +270,13 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	//Start of DELETE function on click of delete button.
 	$('#delete_r').click(function() { 
 		var arr_id = [];
+		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
 		arr_id.push(visit_id);
 		if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
 		$.ajax({ 
 		url: '/classes/Delete.php',
 		type: 'POST',
-		data: {table: "1", ids_to_delete : arr_id},
+		data: {table: "1", ids_to_delete : arr_id, token: csrftoken},
 		dataType : 'JSON',
 		success: function(response) {
 				alert("The following IDs have been completely removed."+"\n"+response.id);

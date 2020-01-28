@@ -1,4 +1,13 @@
 <?php
+
+session_start();
+if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
+	header('Location: /login/'); //User is not logged in. Redirect them to login page.
+	exit;
+}
+if( (!isset($_POST['token'])) || ($_POST['token'] != $_SESSION['token'])) {
+	exit("CSRF Detected.");
+}
 if(isset($_POST['table'])) {
 $table =  $_POST['table']; // 0 means delete everything related to that client_id from the db. 1 means delete visits for that client.
 require_once 'Modify.php';

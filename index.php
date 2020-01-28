@@ -8,6 +8,7 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 
 //If user logged in following code runs.
 require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Connect.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Modify.php');
 $conn =Connect::getInstance()->getConnection();
 $page = isset($_GET['page']) ? $_GET['page']: 1;
 $limit = isset($_GET['limit']) ? $_GET['limit']: 10;
@@ -142,9 +143,13 @@ Visits</label>
 		<!--<th>Actions</th>-->
 	</tr>
 	<tbody>
-<?php 	while($row = mysqli_fetch_assoc($arr)) { // for every row in arr, echo the following?> 
+<?php 	
+	while($row = mysqli_fetch_assoc($arr)) {  //for every row fetched from db
+	$row = Modify::htmlarrayescape($row); //escape special html chars in row to prevent XSS
+	//Print client , first name , last name present in escaped row.
+?>
 	<tr>
-		<td><a href="/info.php?id=<?=$row['client_id']?>"><?=$row['client_id']?></a></td>
+		<td><a href="/info.php?id=<?=$row['client_id']?>"><?=$row['client_id']?></a></td> 
 		<td><a href="/info.php?id=<?=$row['client_id']?>"><?=$row['first_name']?></a></td>
 		<td><a href="/info.php?id=<?=$row['client_id']?>"><?=$row['last_name']?></a></td>
 	</tr>
@@ -248,6 +253,7 @@ $(document).ready(function() {
 	$('#SendServBtn').click(function() {
 		var idee = '';
 		var arr_ids = [];
+		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
 		$('.chickfilla').each(function() { 
 			if ($(this).is(':checked') === true) {
 				idee = $(this).attr('id');
@@ -260,7 +266,7 @@ $(document).ready(function() {
 			$.ajax({ 
 				url: '/classes/Delete.php',
 				type: 'POST',
-				data: {table: "0", ids_to_delete : arr_ids},
+				data: {table: "0", ids_to_delete : arr_ids, token: csrftoken},
 				dataType : 'JSON',
 				success: function(response) {
 					alert("The following IDs have been completely removed."+"\n"+response.id);

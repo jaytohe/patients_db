@@ -144,7 +144,10 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 		<th>Diagnosis</th>
 	</tr>
 	<tbody>
-	<?php if ($number_of_records != 0 ) { while ($row = array_pop($visits)) { ?>
+	<?php if ($number_of_records != 0 ) { 
+			while ($row = array_pop($visits)) { 
+				$row = Modify::htmlarrayescape($row); //prevent XSS injection.
+	?>
 	<tr>
 		<td><a href="/visit.php?id=<?=$row[0]?>"><?=str_replace("-","/",Modify::dateconv($row[1]))?></a><input type='checkbox' class='chickfilla' style='position: relative; display: inline-block; left: 10px;' id="chickfilla_<?=$row[0]?>"></td>
 		<td><a href="/visit.php?id=<?=$row[0]?>"><?=$row[2]?></a></td>
@@ -195,6 +198,7 @@ $(document).ready(function() {
 	$('#SendServBtn').click(function() {
 		var idee = '';
 		var arr_ids = [];
+		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
 		$('.chickfilla').each(function() { 
 			if ($(this).is(':checked') === true) {
 				idee = $(this).attr('id');
@@ -208,7 +212,7 @@ $(document).ready(function() {
 			$.ajax({ 
 				url: '/classes/Delete.php',
 				type: 'POST',
-				data: {table: "1", ids_to_delete : arr_ids},
+				data: {table: "1", ids_to_delete : arr_ids, token: csrftoken},
 				dataType : 'JSON',
 				success: function(response) {
 					alert("The following Visit IDs have been completely removed."+"\n"+response.id);

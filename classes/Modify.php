@@ -22,7 +22,13 @@ class Modify {
 		}
 		
 	}
-	
+	public static function htmlarrayescape($arr) {
+		$new_arr = array();
+		foreach ($arr as $index => $val) {
+			$new_arr[$index] = htmlspecialchars($val);
+		}
+		return $new_arr;
+	}
 	private function escape($args) { //Escape dangerous characters. 
 		foreach ($args as $key => $value) {
 		$args[$key] = stripcslashes($value); //convert escape chars to their actual meaning

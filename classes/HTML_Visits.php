@@ -5,7 +5,7 @@ Class HTML_Visits {
 		
 		public function data_get($strindex ) {
 		if (isset($this->arr[$strindex])) {
-			return stripcslashes($this->arr[$strindex]);
+			return stripcslashes(htmlspecialchars($this->arr[$strindex])); //prevent XSS injection.
 		} else {
 			return "";
 		}
