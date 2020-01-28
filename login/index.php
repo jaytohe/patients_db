@@ -22,7 +22,11 @@
 
 <div class="field">
   <p class="control has-icons-left has-icons-right">
-    <input class="input" type="text" name="username" placeholder="Username">
+	<?php if(isset($usrparam)) { ?>
+	<input class="input" type="text" name="username" placeholder="Username" value="<?=$usrparam?>">
+	<?php } else { ?>
+	<input class="input" type="text" name="username" placeholder="Username">
+	<?php } ?>
     <span class="icon is-small is-left">
       <i class="fas fa-user"></i>
     </span>
@@ -42,6 +46,12 @@
   </p>
 </div>
 </form>
+</div>
+<?php if(isset($nag_error1)) { ?>
+<div class="box" style="background-color: red;">
+	<p style="color: white; font-weight: bold;"> <?=$nag_error1?> </p>
+	<p style="color: white; font-weight: bold;"> <?=$nag_error2?> </p>
+<?php } ?>
 </div>
 </body>
 </div>
