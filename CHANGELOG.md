@@ -28,6 +28,7 @@
 
 > Will add soon: __Mixed Searches.__
 
->1. Search patient with (name or surname or both) __AND__ phone number. Not seperately.
-2. Search visit with (name or surname or both) __AND__ (date or diagnosis). Not seperately.
+> 1. Search patient with (name or surname or both) __AND__ phone number. Not seperately.
+
+> 2. Search visit with (name or surname or both) __AND__ (date or diagnosis). Not seperately.
   
