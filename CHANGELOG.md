@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 1.3.1 - 30/01/2020
+- Oops! Forgot to add XSS injection protection on /search and /visits. Well that's added now ;) 
+
 ## Version 1.3 - 28/01/2020
 **Security Update**
 - New! Login Error Handling. If credentials are wrong or a MySQL error occurs, a nag message shows up and the user may retry.
@@ -18,4 +21,13 @@
 
 ## Version 1.0 - 04/01/2020
 - Initial release.
+
+### Bucketlist:
+
+> Will fix soon: Results on search are limited to 5. Fix: Add scroll bar, increase limit to 20.
+
+> Will add soon: __Mixed Searches.__
+
+>1. Search patient with (name or surname or both) __AND__ phone number. Not seperately.
+2. Search visit with (name or surname or both) __AND__ (date or diagnosis). Not seperately.
   
