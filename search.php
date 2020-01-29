@@ -36,8 +36,10 @@ else {
 		} 
 		$result = $fetcher->add($multi[$i], $bind, $params,1);
 	}
-while($row = $result->fetch_object()) {
-	array_push($arr,$row);
+while($row = $result->fetch_assoc()) {
+	$temparray = $fetcher->htmlarrayescape($row); //prevent XSS injection.
+	$new_obj = (object) $temparray; //typecast temp array to an object. Easily converts in to a JSON readable array.
+	array_push($arr,$new_obj);
 }
 $json = json_encode($arr,JSON_UNESCAPED_UNICODE);
 echo $json;

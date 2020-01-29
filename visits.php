@@ -29,6 +29,7 @@ for ($i=0; $i<3; $i++){
 	if ($i==0) {
 	$count = $result['num'];
 	}
+	$result = $modvisit->htmlarrayescape($result); //prevent XSS injection.
 	} 
 }
 if ($count == 0) {
