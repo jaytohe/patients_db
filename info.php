@@ -142,7 +142,7 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 <div class="field">
   <label class="label" for="dt1">Name<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt1" name="dt1" type="text" value="<?=$result['first_name']?>" placeholder="Enter name:" class="input " required>
+    <input id="dt1" name="dt1" type="text" value="<?=$result['first_name']?>" placeholder="Enter name:" class="input " maxlength="50" required>
     
   </div>
 </div>
@@ -151,7 +151,7 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 <div class="field">
   <label class="label" for="dt2">Surname<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt2" name="dt2" type="text" value="<?=$result['last_name']?>" placeholder="Enter surname:" class="input " required>
+    <input id="dt2" name="dt2" type="text" value="<?=$result['last_name']?>" placeholder="Enter surname:" class="input " maxlength="80" required>
     
   </div>
 </div>
@@ -169,7 +169,7 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 <div class="field">
   <label class="label" for="dt5">Address</label>
   <div class="control">
-    <input id="dt5" name="dt5" type="text" value="<?=$result['address']?>" placeholder="Enter a valid address" class="input ">
+    <input id="dt5" name="dt5" type="text" value="<?=$result['address']?>" placeholder="Enter a valid address" class="input " maxlength="80">
     
   </div>
 </div>
@@ -181,18 +181,17 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 </fieldset>
 	<script type="text/template" id="phone_nums">
 				<div class="field-group row">
-					<input name="phone_nums[{?}][task]" id="task_{?}" "type="text" placeholder="Eg. +326743207899" class="input " required>
-					<input name="phone_nums[{?}][owner]" id="owner_{?}" type="text" placeholder="(Optional) Whose number is this?" class="input ">
+					<input name="phone_nums[{?}][task]" id="task_{?}" "type="text" placeholder="Eg. +326743207899" class="input " maxlength="80" required>
+					<input name="phone_nums[{?}][owner]" id="owner_{?}" type="text" placeholder="(Optional) Whose number is this?" class="input " maxlength="80">
 					<p>&nbsp;</p>
 					<button class="delete" value="Remove">
 				</div>
 			</script>
-			<!-- <input name="phone_nums[{?}][uniqaydee]" id="uniqaydee_{?}" type="hidden" value=""> -->
 <!-- Text input-->
 <div class="field">
   <label class="label" for="dt3">Diagnosis<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt3" name="dt3" type="text" value="<?=$result['diagnosis']?>" placeholder="Enter diagnosis: " class="input " required>
+    <input id="dt3" name="dt3" type="text" value="<?=$result['diagnosis']?>" placeholder="Enter diagnosis: " class="input " maxlength="80" required>
     
   </div>
 </div>

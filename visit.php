@@ -152,7 +152,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 <div class="field">
   <label class="label" for="dt1">Date<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt1" name="dt1" type="text" placeholder="DD/MM/YYYY" class="input " value="<?=$globaldate;?>" required=>
+    <input id="dt1" name="dt1" type="text" placeholder="DD/MM/YYYY" class="input " value="<?=$globaldate;?>" required>
     
   </div>
 </div>
@@ -161,7 +161,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 <div class="field">
   <label class="label" for="dt2">Diagnosis<p style="color: red; display: inline-block;">*</p></label>
   <div class="control">
-    <input id="dt2" name="dt2" type="text" class="input " value="<?=$vis->data_get('diagnosis'); ?>" required=>
+    <input id="dt2" name="dt2" type="text" class="input " value="<?=$vis->data_get('diagnosis'); ?>" maxlength="80" required>
     
   </div>
 </div>
@@ -169,7 +169,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 <div class="field">
   <label class="label" for="dt4">Present Symptom</label>
   <div class="control">
-    <input id="dt4" name="dt4" type="text" value="<?=$vis->data_get('present_symptom'); ?>" class="input ">
+    <input id="dt4" name="dt4" type="text" value="<?=$vis->data_get('present_symptom'); ?>" maxlength="80" class="input">
     
   </div>
 </div>
@@ -186,14 +186,14 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 <div class="field">
   <label class="label" for="dt5">Lab</label>
   <div class="control">                     
-    <textarea class="textarea" id="dt5" name="dt5" ><?=$vis->data_get('lab'); ?></textarea>
+    <textarea class="textarea" maxlength="255" id="dt5" name="dt5" ><?=$vis->data_get('lab'); ?></textarea>
   </div>
 </div>
 <!-- Textarea -->
 <div class="field">
   <label class="label" for="dt6">Imaging Tests</label>
   <div class="control">                     
-    <textarea class="textarea" id="dt6" name="dt6"><?=$vis->data_get('img_test'); ?></textarea>
+    <textarea class="textarea" maxlength="255" id="dt6" name="dt6"><?=$vis->data_get('img_test'); ?></textarea>
   </div>
 </div>
 
@@ -202,14 +202,14 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 <div class="field">
   <label class="label" for="dt7">Histology</label>
   <div class="control">                     
-    <textarea class="textarea" id="dt7" name="dt7"><?=$vis->data_get('histology'); ?></textarea>
+    <textarea class="textarea" maxlength="255" id="dt7" name="dt7"><?=$vis->data_get('histology'); ?></textarea>
   </div>
 </div>
 <!-- Textarea -->
 <div class="field">
   <label class="label" for="dt8">Treatment</label>
   <div class="control">                     
-    <textarea class="textarea" id="dt8" name="dt8"><?=$vis->data_get('treatment'); ?></textarea>
+    <textarea class="textarea" maxlength="255" id="dt8" name="dt8"><?=$vis->data_get('treatment'); ?></textarea>
   </div>
 </div>
 
