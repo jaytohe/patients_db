@@ -19,6 +19,7 @@ class Modify {
 		}
 		} catch(Exception $e) {
 			echo $e->getMessage();
+			die(); //stop execution on exception.
 		}
 		
 	}
@@ -61,8 +62,6 @@ class Modify {
 		// print_r($_POST["phone_nums"]);
 		foreach ($_POST["phone_nums"] as $key => $subarray) { //From Multidimensional Array $_POST --> Get Array phone_nums --> Get every Array newX where X belongs to [0, inf) and is integer.
 			foreach ($subarray as $subkey => $val) {// For every array newX traverse it.
-				//if ($subkey == "task") {$phones[] = $val;} else {$owners[]=$val;} //"task" means its the phone number. "owner" is the owner of that number. 
-				//Above code adds phone numbers and owners to parralel arrays.
 				switch ($subkey) {
 					case "task":
 					$phones[] = $val;
@@ -70,9 +69,6 @@ class Modify {
 					case "owner":
 					$owners[] = $val;
 					break;
-					//case "uniqaydee":
-					//$phone_ids[] = $val;
-					//break;
 				}
 		} 
 		

@@ -42,7 +42,7 @@ if($state ==1) {
 	$vis->arr = $visit_data;
 }
 $outter = $modvisit->add("SELECT first_name,last_name FROM clients WHERE client_id=(?)",'i',$cid,1);
-$result = $outter->fetch_assoc();
+$result = $modvisit->htmlarrayescape($outter->fetch_assoc()); //prevent XSS
 
 /* DATE CONVERSION */
 $tmpdate = Modify::dateconv($vis->data_get('date'));
