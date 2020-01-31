@@ -12,10 +12,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Modify.php');
 $conn =Connect::getInstance()->getConnection();
 $page = isset($_GET['page']) ? $_GET['page']: 1;
 $limit = isset($_GET['limit']) ? $_GET['limit']: 10;
-$number_of_records = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS num FROM clients"))['num']; //not safe for error handling. Works for now, will change it in another release.
+$number_of_records = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS num FROM clients"))['num'];
 require($_SERVER['DOCUMENT_ROOT'].'/utility/pages_calc.php');
-$query="SELECT first_name,last_name,client_id FROM clients ORDER BY client_id DESC LIMIT ".$first_record.", ".$limit; //$limit $page must be sanitised to prevent mysql injection.
-$arr = mysqli_query($conn, $query); //We will fix it in post.
+$query="SELECT first_name,last_name,client_id FROM clients ORDER BY client_id DESC LIMIT ?,?";
+$modindex = new Modify();
+$arr = $modindex->add($query, "ii", array($first_record, $limit),1);
 
 
 ?>
@@ -101,7 +102,18 @@ Visits</label>
 	</div>
 	<div class="level-right">
 		<div class="level-item">
-			<h2 class="subtitle">Records/page :&nbsp;</h2>
+			<div class="dropdown is-up is-hoverable">
+				<div class="dropdown-trigger">
+					<h2 class="subtitle">Records/page :&nbsp;</h2>
+				</div>
+				<div class="dropdown-menu">
+					<div class="dropdown-content">
+						<p>Total Number of Records:</p>
+						<p><?=$number_of_records?></p>
+					</div>
+				</div>
+			</div>
+			
 			<div class="dropdown is-up is-hoverable">
 			<div class="dropdown-trigger">
 			<button class="button" aria-haspopup="true" aria-controls="dropdown-menu7">
@@ -168,7 +180,6 @@ Visits</label>
 <script>
 $(document).ready(function() {
 		$('input:radio[name=table_choice][value=1]').prop("checked", true);
-		//$('#SendServBtn').hide();
 		console.log("DOM is ready.");
 		var first_name = '';
 		var last_name = '';
@@ -182,9 +193,9 @@ $(document).ready(function() {
 			
 		},
 		getValue: function (element) { first_name = $(element).prop("first_name"); last_name=$(element).prop("last_name"); phone=$(element).prop("phone"); return first_name+" "+last_name;},
-		//minCharNumber: 3,
+		requestDelay: 500,
 		list: {
-			maxNumberOfElements: 5,
+			maxNumberOfElements: 20,
 			showAnimation: {
 				type: "normal",
 				time: 500,
@@ -221,7 +232,7 @@ $(document).ready(function() {
 		getValue: function (element) { first_name=$(element).prop("first_name"); last_name=$(element).prop("last_name"); diagnosis=$(element).prop("diagnosis"); return first_name+" "+last_name;},
 		requestDelay: 500,
 		list: {
-			maxNumberOfElements: 5,
+			maxNumberOfElements: 20,
 			showAnimation: {
 				type: "normal",
 				time: 500,
