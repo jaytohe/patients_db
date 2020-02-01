@@ -13,7 +13,7 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>MyAgenda</title>
+    <title>My Agenda</title>
 	
 	<!-- FullCalendar -->
 	<link href='css/fullcalendar.min.css' rel='stylesheet' />
@@ -64,7 +64,15 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 
 </head>
 <body>
-<a href="/index.php">&lt;---&nbsp;Click here to go back Home.</a>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container">
+		<a class="navbar-brand" href="/index.php">Patients DB</a>
+		<div class="mr-sm-2">
+			<a href="/logout.php" class="navbar-item">Logout</a>
+		</div>
+	</div>
+	</nav>
 <br>
 <!-- Page Content -->
 <div class="container">
@@ -128,6 +136,7 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 							<label for="description" class="col-12 control-label">Description</label>
 							<div class="col-12">
 								<input type="text" name="description" class="form-control" id="description" placeholder="Description">
+								<input type="hidden" id="token" name="token" value="<?=$_SESSION['token']?>">
 							</div>
 						</div>
 					</div>
@@ -192,6 +201,7 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 							<label for="description" class="col-12 control-label">Description</label>
 							<div class="col-12">
 								<input type="text" name="description" class="form-control" id="description" placeholder="Description">
+								<input type="hidden" id="token" name="token" value="<?=$_SESSION['token']?>">
 							</div>
 						</div>
 						<div class="form-group" id="del"> 
@@ -318,6 +328,5 @@ if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
 		}
 	});
 </script>
-<center><i>UI Discontinuity. This page uses Bootsrap CSS while others use Bulma. Future relase shall use only bulma.</i></center>
 </body>
 </html>

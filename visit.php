@@ -124,8 +124,6 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	</div>
 	<div id="menyoo" class="navbar-menu">
 		<div class="navbar-end">
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="fas fa-shield-alt"></i>&nbsp;Security</a>
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="far fa-question-circle"></i>&nbsp;Help</a>
 			<a href="/logout.php" class="navbar-item"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
 		</div>
 	</div>
@@ -142,11 +140,8 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	<li class="is-active"><a href="#"><?=$mode_string?> Entry</a></li>
   </ul>
 </nav>
-<form class="form-horizontal" id="leform" action="" method="post">
+<form class="form" id="leform" action="" method="post">
 <fieldset>
-
-<!-- Form Name -->
-<legend></legend>
 
 <!-- Text input-->
 <div class="field">
@@ -249,22 +244,12 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	</div>
 	</div>
 	</section>
+	
+<!-- Burger Menu if mobile device -->
+<script src="/js/nav_burger.js"></script>
+<script src="/js/urlparameter.js"></script>
 <script>
  $(function(){
-	var getUrlParameter = function getUrlParameter(sParam) {
-		var sPageURL = window.location.search.substring(1),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-        }
-    }
-};
 	var visit_id = getUrlParameter('id'); //Get client ID from url. Not good practice. In future we will fetch client_id in a hidden field without requiring JS.
 	
 	//Start of DELETE function on click of delete button.
@@ -286,7 +271,6 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 		});
 	}
 	});
-	
 	//On Submit Function. --Checks Validity of date.
 	$("#leform").submit(function( event ) {
 		console.log("Processing Submit...");

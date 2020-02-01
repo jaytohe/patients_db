@@ -1,8 +1,13 @@
 <?php
+session_start();
 
+if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
+	header('Location: /login/'); //User is not logged in. Redirect them to login page.
+	exit;
+}
 if (isset($_GET['start']) && isset($_GET['end'])) {
 
-
+require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Modify.php');
 function strip_time($datestr) {
 	try {
 		$dtconv = new DateTime($datestr);
@@ -22,8 +27,10 @@ if(!$stmt->execute()) {echo "Execute failed: (" . $query->errno . ") " . $query-
 
 $result = $stmt->get_result();
 $output_arrays = array();
-while($row = $result->fetch_object()) {
-	array_push($output_arrays,$row);
+while($row = $result->fetch_assoc()) { //same technique as that on search.php
+	$temp_array = Modify::htmlarrayescape($row);
+	$new_obj = (object) $temp_array;
+	array_push($output_arrays,$new_obj);
 }
 
 // Send JSON to the client.

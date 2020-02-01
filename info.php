@@ -108,8 +108,6 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 	</div>
 	<div id="menyoo" class="navbar-menu">
 		<div class="navbar-end">
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="fas fa-shield-alt"></i>&nbsp;Security</a>
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="far fa-question-circle"></i>&nbsp;Help</a>
 			<a href="/logout.php" class="navbar-item"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
 		</div>
 	</div>
@@ -127,16 +125,9 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
   
 </nav>
 
-  <!-- Right side -->
-  <div class="container">
-    
-  </div>
 
-<form class="form-horizontal" id="leform" action="" method="post">
+<form class="form" id="leform" action="" method="post">
 <fieldset>
-
-<!-- Form Name -->
-<legend></legend>
 
 <!-- Text input-->
 <div class="field">
@@ -232,90 +223,13 @@ else if ( ($method == 'POST') && (isset($_POST['k39btn'])) ) { //this runs when 
 	</section>
 </body>
 <script>
- $(function(){ // <-- Runs when DOM is ready.
-	 $(".phone_nums .repeatable").repeatable({
-	 addTrigger: ".phone_nums .add",
-	 deleteTrigger: ".phone_nums .delete",
-	 template: "#phone_nums",
-	 min: <?=$num_of_phones?>,
-	 max: 10
-	});
-
-	var phones = <?php echo json_encode($phones); ?>;
-	var owners = <?php echo json_encode($owners); ?>;
-	
-	var getUrlParameter = function getUrlParameter(sParam) { //Get ids from url function.
-    var sPageURL = window.location.search.substring(1),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-        }
-    }
-	};
-
-	$("input[id^='task_'").each(function(index, element) { // <- Re-inputs fetched phone numbers to their fields. 
-		$(element).val(phones[index]);
-	});
-	$("input[id^='owner_'").each(function(index, element) { // <- Re-inputs fetched owners to their fields.
-		$(element).val(owners[index]);
-	});
-	var client_id = getUrlParameter('id'); //Get client ID from url. Not good practice. In future we will fetch client_id in a hidden field without requiring JS.
-	
-	$('#delete_r').click(function() { //<-- Runs when delete button is clicked.
-		var arr_id = [];
-		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
-		arr_id.push(client_id);
-		if (confirm("WARNING! THIS ACTION CANNOT BE UNDONE. Proceed?")) {
-		$.ajax({ 
-		url: '/classes/Delete.php',
-		type: 'POST',
-		data: {table: "0", ids_to_delete : arr_id, token: csrftoken},
-		dataType : 'JSON',
-		success: function(response) {
-				alert("The following IDs have been completely removed."+"\n"+response.id);
-				window.location.href = "/index.php";
-			}
-			
-		});
-		}
-		//END OF DELETE FUNCTION
-	});
-		//On Submit Function. --Checks Validity of data input.
-		$("#leform").submit(function( event ) {
-		console.log("Processing Submit...");
-		// Declare Variables
-		var regex_date = /^([1-2][0-9]|(3)[0-1]|[1-9]|(0)[1-9])(\/)(((0)[1-9])|((1)[0-2])|[0-9])(\/)\d{4}$/;
-		var date = $("#dt4").val(); //get date value
-		var regex_phone = /^([(+]*[0-9]+[()+. -]*)$/; //same regex we use in search.php
-		
-		
-		//Check if date is in correct format (DD/MM/YYYY) with regex.
-		if(regex_date.test(date) == false) {
-			console.log(date);
-			alert("Invalid date. Correct format : DD/MM/YYYY"+"\nExample:  09/06/2019 or 9/6/2019");
-			event.preventDefault();
-		} else {console.log("Date is good.");}
-		
-		//Check if phone numbers match regex.
-		$("[id^=task_]").each(function(index, elem) { //we use jquery's each() to iterate through multiple phone numbers.
-			var phone = $(elem).val();
-			console.log(phone);
-			if((phone.length < 4) || !(phone).match(regex_phone)) {
-				alert("Phone number "+(index+1)+" is not correct."+"\n"+"Please check the format or the length of the number.");
-				event.preventDefault();
-			} else {console.log("Phone number is good.");}
-		});
-		//END OF SUBMIT FUNCTION
-		});
-		
-	// END OF DOCUMENT READY FUNCTION
-	});
-
-
+var min_phone = <?=$num_of_phones?>;
+var phones = <?php echo json_encode($phones); ?>;
+var owners = <?php echo json_encode($owners); ?>;
+var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
 </script>
+<script src="/js/nav_burger.js"></script>
+<script src="/js/urlparameter.js"></script>
+<script src="/js/new__info/repeatable_setup.js"></script>
+<script src="/js/new__info/get_delete_info.js"></script>
 </html>

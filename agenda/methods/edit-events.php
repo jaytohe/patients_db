@@ -1,6 +1,16 @@
 <?php
+session_start();
+
+if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
+	header('Location: /login/'); //User is not logged in. Redirect them to login page.
+	exit;
+}
+
 if (empty($_POST)) {exit();};
 
+if( (!isset($_POST['token'])) || ($_POST['token'] != $_SESSION['token'])) { //prevent CSRF
+	exit("CSRF Detected.");
+}
 require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Connect.php');
 $conn = Connect::getInstance()->getConnection();
 $queries = ["DELETE FROM events WHERE id = (?)", "UPDATE events SET title=(?), description=(?), color=(?) WHERE id=(?)","UPDATE events SET start=(?), end=(?) WHERE id = (?)"];
@@ -25,7 +35,7 @@ if (isset($_POST['id'])){
 		if(!$stmt->execute()) {echo "Execute failed: (" . $query->errno . ") " . $query->error; exit(); }
 	
 	}
-	header('Location: /agenda/index.html');
+	header('Location: /agenda/');
 } else if (isset($_POST['Event'][0]) && isset($_POST['Event'][1]) && isset($_POST['Event'][2])){
 	try{
 	$stmt = $conn->prepare($queries[2]);

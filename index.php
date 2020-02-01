@@ -48,8 +48,6 @@ $arr = $modindex->add($query, "ii", array($first_record, $limit),1);
 	</div>
 	<div id="menyoo" class="navbar-menu">
 		<div class="navbar-end">
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="fas fa-shield-alt"></i>&nbsp;Security</a>
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="far fa-question-circle"></i>&nbsp;Help</a>
 			<a href="/logout.php" class="navbar-item"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
 		</div>
 	</div>
@@ -176,156 +174,20 @@ Visits</label>
 </section>
 </body>
 
+<!-- Burger Menu if mobile device -->
+<script src="/js/nav_burger.js"></script>
 
+<!-- Import easyAutocomplete Search Settings -->
+<script src="/js/index/autocomplete_setup.js"></script>
+
+<!-- Declare csrf token used in delete_entries -->
 <script>
-$(document).ready(function() {
-		$('input:radio[name=table_choice][value=1]').prop("checked", true);
-		console.log("DOM is ready.");
-		var first_name = '';
-		var last_name = '';
-		var phone = '';
-		var diagosis ='';
-		var options = {
-		url: function (phrase) {
-			phrase = encodeURIComponent(phrase);
-			console.log(phrase);
-			return '/search.php?query=' + phrase;
-			
-		},
-		getValue: function (element) { first_name = $(element).prop("first_name"); last_name=$(element).prop("last_name"); phone=$(element).prop("phone"); return first_name+" "+last_name;},
-		requestDelay: 500,
-		list: {
-			maxNumberOfElements: 20,
-			showAnimation: {
-				type: "normal",
-				time: 500,
-				callback: function() {}
-			},
-			hideAnimation: {
-				type: "fade",
-				time: 400,
-				callback: function() {}
-			},
-			onClickEvent: function() {
-				var val = $("#data-remote").getSelectedItemData().client_id;
-				window.location.href = 'info.php?id='+val;
-			}
-		},
-		template: {
-			type: "custom",
-			method: function(value,item) {
-				return "<p>Full Name:"+first_name+" "+last_name+"</p><p>Phone :"+" "+phone+"</p>";
-			}
-		}
-		};
-		$('#data-remote').easyAutocomplete(options);
-		$('input:radio[name=table_choice]').change(function() {
-		
-        if (this.value == '2') {
-		console.log("hey");
-        var modeoptions = {
-		url: function (phrase) {
-			phrase = encodeURIComponent(phrase);
-			return '/search.php?query=' + phrase + '&mode=1';
-			
-		},
-		getValue: function (element) { first_name=$(element).prop("first_name"); last_name=$(element).prop("last_name"); diagnosis=$(element).prop("diagnosis"); return first_name+" "+last_name;},
-		requestDelay: 500,
-		list: {
-			maxNumberOfElements: 20,
-			showAnimation: {
-				type: "normal",
-				time: 500,
-				callback: function() {}
-			},
-			hideAnimation: {
-				type: "fade",
-				time: 400,
-				callback: function() {}
-			},
-			onClickEvent: function() {
-				var val = $("#data-remote").getSelectedItemData().visit_id;
-				window.location.href = 'visit.php?id='+val;
-			}
-		},
-		template: {
-			type: "custom",
-			method: function(value,item) {
-				return "<p>Full Name :"+ " " +first_name+ " " +last_name+"</p><p>Diagnosis :"+" "+diagnosis+"</p><p>Date :"+" "+item.date+"</p>";
-			}
-		}
-		}
-		} else {
-		modeoptions = options;
-		}
-		$('#data-remote').easyAutocomplete(modeoptions);
-    });
-	//Commit function.
-	$('#SendServBtn').click(function() {
-		var idee = '';
-		var arr_ids = [];
-		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
-		$('.chickfilla').each(function() { 
-			if ($(this).is(':checked') === true) {
-				idee = $(this).attr('id');
-				idee = idee.replace("chickfilla_", "");
-				arr_ids.push(idee);
-			}
-		});
-		if (Array.isArray(arr_ids) && arr_ids.length) {
-			if(confirm("Warning! DANGEROUS ACTION! Are you sure you want to delete IDs: "+arr_ids.toString()+" ?")) {
-			$.ajax({ 
-				url: '/classes/Delete.php',
-				type: 'POST',
-				data: {table: "0", ids_to_delete : arr_ids, token: csrftoken},
-				dataType : 'JSON',
-				success: function(response) {
-					alert("The following IDs have been completely removed."+"\n"+response.id);
-					window.location.href = window.location.href;
-				}
-			
-			});
-			}
-		}
-		
-	});
-
-});
-var already_clicked =0;
-function OnDelete(elem) {
-	
-	if (already_clicked ==0) {
-	elem.classList.replace('is-info', 'is-warning');
-	elem.innerHTML = 'Delete Mode: On';
-	alert("You can now remove entries from the database. Proceed with caution!");
-	jQuery('#patients_tb td:nth-child(1) a').each(function(key, val) {
-		jQuery(val).css('display', 'inline-block');
-		var id="chickfilla_";
-		id += jQuery(val).text();
-		jQuery(val).after("<input type='checkbox' class='chickfilla' style='position: relative; display: inline-block; left: 10px;' id="+id+">");
-	});
-	jQuery('#SendServBtn').removeAttr("style");
-	already_clicked = 1;
-	} else {
-	jQuery('.chickfilla').remove();
-	elem.classList.replace('is-warning', 'is-info');
-	elem.innerHTML = 'Delete Mode: Off';
-	jQuery('#patients_tb td:nth-child(1) a').each(function(key,val) {
-		jQuery(val).css('display', 'block');
-	});
-	jQuery('#SendServBtn').css("display", "none");
-	already_clicked = 0;
-	}
-}
-(function() {
-  var burger = document.querySelector('.burger');
-  var nav = document.querySelector('#'+burger.dataset.target);
- 
-  burger.addEventListener('click', function(){
-    burger.classList.toggle('is-active');
-    nav.classList.toggle('is-active');
-  });
-})();
+var choosetable = "0";
+var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
+var set_mode = 0;
 </script>
+
+<!-- Batch Delete-->
+<script src="/js/index/delete_entries.js"></script>
 </html>
 

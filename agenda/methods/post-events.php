@@ -1,5 +1,17 @@
 <?php
+session_start();
+
+if ( !isset($_SESSION['usr_id']) || !isset($_SESSION['username']) ) {
+	header('Location: /login/'); //User is not logged in. Redirect them to login page.
+	exit;
+}
+
 if (isset($_POST['title']) && isset($_POST['description']) && isset($_POST['start']) && isset($_POST['end']) && isset($_POST['color'])){
+	
+if( (!isset($_POST['token'])) || ($_POST['token'] != $_SESSION['token'])) { //prevent CSRF
+	exit("CSRF Detected.");
+}
+
 require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Connect.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/classes/Modify.php');
 $conn = Connect::getInstance()->getConnection();

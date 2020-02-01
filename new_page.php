@@ -62,8 +62,6 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	</div>
 	<div id="menyoo" class="navbar-menu">
 		<div class="navbar-end">
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="fas fa-shield-alt"></i>&nbsp;Security</a>
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="far fa-question-circle"></i>&nbsp;Help</a>
 			<a href="/logout.php" class="navbar-item"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
 		</div>
 	</div>
@@ -78,11 +76,9 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
     <li class="is-active"><a href="/new.php" aria-current="page">New Entry</a></li>
   </ul>
 </nav>
-<form class="form-horizontal" id="leform" action="" method="post">
+<form class="form" id="leform" action="" method="post">
 <fieldset>
 
-<!-- Form Name -->
-<legend></legend>
 
 <!-- Text input-->
 <div class="field">
@@ -177,42 +173,17 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 	</div>
 	</section>
 </body>
+
+<!-- Burger Menu if mobile device -->
+<script src="/js/nav_burger.js"></script>
+
 <script>
- $(function(){
-	 //Repeat phone number fields -- Repeatable.js script
-	 $(".phone_nums .repeatable").repeatable({
-	 addTrigger: ".phone_nums .add",
-	 deleteTrigger: ".phone_nums .delete",
-	 template: "#phone_nums",
-	 min: 1,
-	 max: 10
-	});
-	//On Submit Function. --Checks Validity of data input.
-	$("#leform").submit(function( event ) {
-		console.log("Processing Submit...");
-		// Declare Variables
-		var regex_date = /^([1-2][0-9]|(3)[0-1]|[1-9]|(0)[1-9])(\/)(((0)[1-9])|((1)[0-2])|[0-9])(\/)\d{4}$/;
-		var date = $("#dt4").val(); //get date value
-		var regex_phone = /^([(+]*[0-9]+[()+. -]*)$/; //same regex we use in search.php
-		
-		
-		//Check if date is in correct format (DD/MM/YYYY) with regex.
-		if(regex_date.test(date) == false) {
-			console.log(date);
-			alert("Invalid date. Correct format : DD/MM/YYYY"+"\nExample:  09/06/2019 or 9/6/2019");
-			event.preventDefault();
-		} else {console.log("Date is good.");}
-		
-		//Check if phone numbers match regex.
-		$("[id^=task_]").each(function(index, elem) { //we use jquery's each() to iterate through multiple phone numbers.
-			var phone = $(elem).val();
-			console.log(phone);
-			if((phone.length < 4) || !(phone).match(regex_phone)) {
-				alert("Phone number "+(index+1)+" is not correct."+"\n"+"Please check the format or the length of the number.");
-				event.preventDefault();
-			} else {console.log("Phone number is good.");}
-		});
-	});
-});
+var min_phone = 1;
 </script>
+
+<!-- Duplicate phone, owner field -->
+<script src="/js/new__info/repeatable_setup.js"></script>
+
+<!-- Validate data -->
+<script src="/js/new__info/validate_input.js"></script>
 </html>

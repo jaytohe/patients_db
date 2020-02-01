@@ -68,8 +68,6 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 	</div>
 	<div id="menyoo" class="navbar-menu">
 		<div class="navbar-end">
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="fas fa-shield-alt"></i>&nbsp;Security</a>
-			<a href="#" class="navbar-item" onclick="alert('Coming soon.');"><i class="far fa-question-circle"></i>&nbsp;Help</a>
 			<a href="/logout.php" class="navbar-item"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a>
 		</div>
 	</div>
@@ -133,7 +131,7 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 		</div>
 		</div>
 </nav>
-<table class="table is-bordered is-hoverable is-fullwidth" id="visits_db">
+<table class="table is-bordered is-hoverable is-fullwidth" id="patients_tb">
 	<thead>
 	<colgroup>
 		<col width="50%">
@@ -150,7 +148,7 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 				$row = Modify::htmlarrayescape($row); //prevent XSS injection.
 	?>
 	<tr>
-		<td><a href="/visit.php?id=<?=$row[0]?>"><?=str_replace("-","/",Modify::dateconv($row[1]))?></a><input type='checkbox' class='chickfilla' style='position: relative; display: inline-block; left: 10px;' id="chickfilla_<?=$row[0]?>"></td>
+		<td><a href="/visit.php?id=<?=$row[0]?>"><?=str_replace("-","/",Modify::dateconv($row[1]))?></a><input type="hidden" value="<?=$row[0]?>" name="visit_id"></td>
 		<td><a href="/visit.php?id=<?=$row[0]?>"><?=$row[2]?></a></td>
 	</tr>
 	<?php  } } else { ?>
@@ -166,68 +164,15 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 </section>
 </div>
 </section>
-<script>
-var already_clicked =0;
-function OnDelete(elem) {
-	
-	if (already_clicked ==0) {
-	elem.classList.replace('is-info', 'is-warning');
-	elem.innerHTML = 'Delete Mode: On';
-	alert("You can now remove entries from the database. Proceed with caution!");
-	jQuery('#visits_db td:nth-child(1) a').each(function(key, val) {
-		jQuery(val).css('display', 'inline-block');
-	});
-	$(".chickfilla").show();
-	$("#SendServBtn").removeAttr("style");
-	already_clicked = 1;
-	} else {
-	jQuery('.chickfilla').hide();
-	elem.classList.replace('is-warning', 'is-info');
-	elem.innerHTML = 'Delete Mode: Off';
-	jQuery('#visits_db td:nth-child(1) a').each(function(key,val) {
-		jQuery(val).css('display', 'block');
-	});
-	jQuery('#SendServBtn').css("display", "none");
-	already_clicked = 0;
-	}
-}
+<!-- Burger Menu if mobile device -->
+<script src="/js/nav_burger.js"></script>
 
-$(document).ready(function() {
-	$('#SendServBtn').hide();
-	$(".chickfilla").hide();
-	//Commit function
-	$('#SendServBtn').click(function() {
-		var idee = '';
-		var arr_ids = [];
-		var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
-		$('.chickfilla').each(function() { 
-			if ($(this).is(':checked') === true) {
-				idee = $(this).attr('id');
-				idee = idee.replace("chickfilla_", "");
-				arr_ids.push(idee);
-				console.log(idee);
-			}
-		});
-		if (Array.isArray(arr_ids) && arr_ids.length) {
-			if(confirm("Warning! DANGEROUS ACTION! Are you sure you want to delete Visits IDs: "+arr_ids.toString()+" ?")) {
-			$.ajax({ 
-				url: '/classes/Delete.php',
-				type: 'POST',
-				data: {table: "1", ids_to_delete : arr_ids, token: csrftoken},
-				dataType : 'JSON',
-				success: function(response) {
-					alert("The following Visit IDs have been completely removed."+"\n"+response.id);
-					window.location.href = window.location.href;
-				}
-			
-			});
-			}
-		}
-		
-	});
-	
-});
+<script>
+var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
+var choosetable = "1";
+var set_mode = 1;
 </script>
+<script src="/js/index/delete_entries.js"></script>
 </body>
 </html>
 
