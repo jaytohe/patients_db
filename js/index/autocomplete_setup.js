@@ -15,7 +15,7 @@ $(document).ready(function() {
 		getValue: function (element) { first_name = $(element).prop("first_name"); last_name=$(element).prop("last_name"); phone=$(element).prop("phone"); return first_name+" "+last_name;},
 		requestDelay: 500,
 		list: {
-			maxNumberOfElements: 20,
+			maxNumberOfElements: 50,
 			showAnimation: {
 				type: "normal",
 				time: 500,
@@ -52,7 +52,7 @@ $(document).ready(function() {
 		getValue: function (element) { first_name=$(element).prop("first_name"); last_name=$(element).prop("last_name"); diagnosis=$(element).prop("diagnosis"); return first_name+" "+last_name;},
 		requestDelay: 500,
 		list: {
-			maxNumberOfElements: 20,
+			maxNumberOfElements: 50,
 			showAnimation: {
 				type: "normal",
 				time: 500,
