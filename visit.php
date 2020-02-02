@@ -97,7 +97,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
+    <title>Add/Edit Visit</title>
     <link rel="stylesheet" href="/css/bulma.css">
 	<script
   src="https://code.jquery.com/jquery-3.4.1.min.js"

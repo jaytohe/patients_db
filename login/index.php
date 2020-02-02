@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Patiends DB v1.0</title>
+    <title>patients_db 2.0</title>
     <link rel="stylesheet" href="/css/bulma.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
@@ -58,5 +58,6 @@
 </div>
 </div>
 </div>
+<p style="position: absolute; bottom: 0; right: 0; color: gray;">Release 2.0 | Feb 2, 2020</p>
 </section>
 </html>

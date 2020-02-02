@@ -47,7 +47,7 @@ $list = str_replace('?page=', '?id='.$id.'&page=', $list);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
+    <title>Visits</title>
     <link rel="stylesheet" href="/css/bulma.css">
 	<script
   src="https://code.jquery.com/jquery-3.4.1.min.js"
