@@ -232,4 +232,6 @@ var csrftoken =<?php echo "'".$_SESSION['token']."'" ?>;
 <script src="/js/urlparameter.js"></script>
 <script src="/js/new__info/repeatable_setup.js"></script>
 <script src="/js/new__info/get_delete_info.js"></script>
+<!-- Validate data -->
+<script src="/js/new__info/validate_input.js"></script>
 </html>

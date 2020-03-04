@@ -208,6 +208,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
   </div>
 </div>
 
+<!--
 <label class="label" for="dt9">Attachment</label>
 <div class="file">
   <label class="file-label">
@@ -222,6 +223,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
     </span>
   </label>
 </div>
+-->
 
 <!-- Button -->
 <br>
@@ -265,7 +267,7 @@ if ( ($_SERVER['REQUEST_METHOD'] == 'POST') && (isset($_POST['k39btn'])) ) {
 		dataType : 'JSON',
 		success: function(response) {
 				alert("The following IDs have been completely removed."+"\n"+response.id);
-				window.location.href = '/index.php';
+				window.location.href = '/visits.php?id=<?=$cid?>';
 		}
 			
 		});
