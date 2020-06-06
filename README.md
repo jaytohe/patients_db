@@ -1,6 +1,8 @@
 ﻿# ![patients_db logo](https://raw.githubusercontent.com/jaytohe/patients_db/master/css/logo.png)
 **A frontend & backend solution for easily managing patients in a clinic.**
 
+This is my Computer Science IA for the International Baccalaurete Diploma Program.
+
 Written in PHP, MySQL and HTML,  CSS,  JS.
 Tested to run on MySQL version 8.0.x and PHP 7.3.x.
 
